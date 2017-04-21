@@ -1,3 +1,5 @@
+package model;
+
 import java.net.InetAddress;
 
 /**
@@ -48,7 +50,7 @@ public class SocketAddress {
 
     @Override
     public String toString() {
-        return "SocketAddress{" +
+        return "model.SocketAddress{" +
                 "port=" + port +
                 ", address=" + address +
                 '}';

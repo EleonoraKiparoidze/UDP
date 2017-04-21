@@ -1,3 +1,5 @@
+package model;
+
 import java.sql.Timestamp;
 
 /**
@@ -48,7 +50,7 @@ public class ClientCapacityInfo {
 
     @Override
     public String toString() {
-        return "ClientCapacityInfo{" +
+        return "model.ClientCapacityInfo{" +
                 "timeReceive=" + timeReceive +
                 ", capacity=" + capacity +
                 '}';
