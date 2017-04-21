@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UDPServer {
 
     private DatagramSocket socket;
-    private Map < String, List<Integer>> information = new ConcurrentHashMap<>();
+    private Map < SocketAddress, List<Integer>> information = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
 
-            UDPServer udpServer = new UDPServer();
+        UDPServer udpServer = new UDPServer();
 
     }
 
@@ -37,7 +37,7 @@ public class UDPServer {
             int port = 6666;
             int clientPort;
             int capacity;
-            String clientKey;
+            SocketAddress socketAddress;
             List<Integer> listOfCapacity;
             try {
                 socket = new DatagramSocket(port);
@@ -50,14 +50,12 @@ public class UDPServer {
                     socket.receive(packet);
                     InetAddress clientAddress = packet.getAddress();
                     clientPort = packet.getPort();
-                    clientKey = String.valueOf(clientAddress)+":"+String.valueOf(clientPort);
                     capacity = ByteBuffer.wrap(buffer).getInt();
+                    socketAddress = new SocketAddress(clientPort,clientAddress);
+                    information.put(socketAddress,Arrays.asList(capacity));
 
-                    information.put(clientKey,Arrays.asList(capacity));
-                    //System.out.println(capacity + " from " + clientAddress + " : " + clientPort);
-
-                    for(String key: information.keySet()){
-                        System.out.println("Key" + key + " Value: ");
+                    for(SocketAddress key: information.keySet()){
+                        System.out.println("Key" + key.getAddress().toString() +":" + key.getPort()+ " Value: ");
                         for (Integer value : information.get(key)){
                             System.out.println("  " + value);
                         }
