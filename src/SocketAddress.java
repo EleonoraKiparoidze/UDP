@@ -27,4 +27,30 @@ public class SocketAddress {
     public void setAddress(InetAddress address) {
         this.address = address;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SocketAddress that = (SocketAddress) o;
+
+        if (port != that.port) return false;
+        return address != null ? address.equals(that.address) : that.address == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = port;
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SocketAddress{" +
+                "port=" + port +
+                ", address=" + address +
+                '}';
+    }
 }

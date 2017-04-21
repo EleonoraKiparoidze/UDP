@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -14,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UDPServer {
 
     private DatagramSocket socket;
-    private Map < SocketAddress, List<Integer>> information = new ConcurrentHashMap<>();
+    private Map<SocketAddress, List<Integer>> information = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
 
@@ -48,15 +47,18 @@ public class UDPServer {
                 try {
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
+
                     InetAddress clientAddress = packet.getAddress();
                     clientPort = packet.getPort();
                     capacity = ByteBuffer.wrap(buffer).getInt();
-                    socketAddress = new SocketAddress(clientPort,clientAddress);
-                    information.put(socketAddress,Arrays.asList(capacity));
 
-                    for(SocketAddress key: information.keySet()){
-                        System.out.println("Key" + key.getAddress().toString() +":" + key.getPort()+ " Value: ");
-                        for (Integer value : information.get(key)){
+                    socketAddress = new SocketAddress(clientPort, clientAddress);
+
+                    information.put(socketAddress, Arrays.asList(capacity));
+
+                    for (SocketAddress key : information.keySet()) {
+                        System.out.println(key.toString() + " Value: ");
+                        for (Integer value : information.get(key)) {
                             System.out.println("  " + value);
                         }
                     }
