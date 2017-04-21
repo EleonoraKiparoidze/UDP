@@ -1,9 +1,13 @@
+
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UDPServer {
 
     private DatagramSocket socket;
-    private Map<SocketAddress, List<Integer>> information = new ConcurrentHashMap<>();
+    private Map<SocketAddress, List<ClientCapacityInfo>> socketAddressAndCapacityListMap = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
 
@@ -32,12 +36,12 @@ public class UDPServer {
         }
 
         public void run() {
-            byte[] buffer = new byte[4];
+            byte[] buffer = new byte[Integer.BYTES];
             int port = 6666;
             int clientPort;
             int capacity;
             SocketAddress socketAddress;
-            List<Integer> listOfCapacity;
+            ClientCapacityInfo clientCapacityInfo;
             try {
                 socket = new DatagramSocket(port);
             } catch (SocketException e) {
@@ -54,12 +58,19 @@ public class UDPServer {
 
                     socketAddress = new SocketAddress(clientPort, clientAddress);
 
-                    information.put(socketAddress, Arrays.asList(capacity));
+                    Timestamp timeReceive = Timestamp.valueOf(LocalDateTime.now());
 
-                    for (SocketAddress key : information.keySet()) {
+                    clientCapacityInfo = new ClientCapacityInfo(timeReceive,capacity);
+
+                    if(socketAddressAndCapacityListMap.containsKey(socketAddress)){
+                        socketAddressAndCapacityListMap.get(socketAddress).add(clientCapacityInfo);
+                    }else{
+                        socketAddressAndCapacityListMap.put(socketAddress,new ArrayList<>(Arrays.asList(clientCapacityInfo)));
+                    }
+                    for (SocketAddress key : socketAddressAndCapacityListMap.keySet()) {
                         System.out.println(key.toString() + " Value: ");
-                        for (Integer value : information.get(key)) {
-                            System.out.println("  " + value);
+                        for (ClientCapacityInfo value : socketAddressAndCapacityListMap.get(key)) {
+                            System.out.println("  " + value.toString());
                         }
                     }
                 } catch (IOException e) {
