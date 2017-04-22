@@ -14,9 +14,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by Eleonora on 16.04.2017.
- */
+
 public class UDPServer {
 
     private DatagramSocket socket;
